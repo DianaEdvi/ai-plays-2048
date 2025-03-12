@@ -1642,7 +1642,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1045bf103564ce143bf2db695e6e9908, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tileClassifiers:
+  tileProperties:
   - value: 2
     tileColor: {r: 1, g: 1, b: 1, a: 1}
     textColor: {r: 0.2, g: 0.2, b: 0.2, a: 1}
@@ -1661,26 +1661,21 @@ MonoBehaviour:
   - value: 64
     tileColor: {r: 0.9647059, g: 0.36862746, b: 0.23137255, a: 1}
     textColor: {r: 1, g: 1, b: 1, a: 1}
-  - value: 128
+  - value: 0
     tileColor: {r: 0.92941177, g: 0.8117647, b: 0.44705883, a: 1}
-    textColor: {r: 1, g: 1, b: 1, a: 1}
-  - value: 256
+    textColor: {r: 0, g: 0, b: 0, a: 1}
+  - value: 0
     tileColor: {r: 0.92941177, g: 0.8, b: 0.38039216, a: 1}
-    textColor: {r: 1, g: 1, b: 1, a: 1}
-  - value: 512
+    textColor: {r: 0, g: 0, b: 0, a: 1}
+  - value: 0
     tileColor: {r: 0.92941177, g: 0.78431374, b: 0.3137255, a: 1}
-    textColor: {r: 1, g: 1, b: 1, a: 1}
-  - value: 1024
+    textColor: {r: 0, g: 0, b: 0, a: 1}
+  - value: 0
     tileColor: {r: 0.92941177, g: 0.77254903, b: 0.24705882, a: 1}
-    textColor: {r: 1, g: 1, b: 1, a: 1}
-  - value: 2048
+    textColor: {r: 0, g: 0, b: 0, a: 1}
+  - value: 0
     tileColor: {r: 0.92941177, g: 0.7607843, b: 0.18039216, a: 1}
-    textColor: {r: 1, g: 1, b: 1, a: 1}
-  - value: 4096
-    tileColor: {r: 0.2, g: 0.2, b: 0.2, a: 1}
-    textColor: {r: 1, g: 1, b: 1, a: 1}
-  cells: []
-  emptyCells: []
+    textColor: {r: 0, g: 0, b: 0, a: 1}
   tilePrefab: {fileID: 8229954880880984900, guid: ab5aac0c7d87dab49b8bdd3475434581, type: 3}
 --- !u!4 &965819834
 Transform:

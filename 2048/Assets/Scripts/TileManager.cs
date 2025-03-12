@@ -2,29 +2,34 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
 
 [System.Serializable]
-public class TileClassifier
+public class TileProperties
 {
     [SerializeField] private int value;
     [SerializeField] private Color tileColor;
     [SerializeField] private Color textColor;
+
+    public int Value => value;
+
+    public Color TileColor => tileColor;
+
+    public Color TextColor => textColor;
 }
 
-public class TileProperties : MonoBehaviour
+public class TileManager : MonoBehaviour
 {
-    [SerializeField] private TileClassifier[] tileClassifiers;
-    [SerializeField] private GameObject[] cells;
-    [SerializeField] private GameObject[] emptyCells; // Store childless cells
+    [SerializeField] private TileProperties[] tileProperties;
     [SerializeField] private GameObject tilePrefab;
+    private GameObject[] _cells;
 
-    
+
     // Start is called before the first frame update
     void Start()
     {
-        cells = GameObject.FindGameObjectsWithTag("Cell");
-        emptyCells = new GameObject[cells.Length];
+        _cells = GameObject.FindGameObjectsWithTag("Cell");
     }
 
     // Update is called once per frame
@@ -32,35 +37,39 @@ public class TileProperties : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            SpawnTile();            
+            SpawnTile();
         }
     }
 
     /**
      * Spawns a new tile in a random open spot on the board
      */
- private void SpawnTile()
+    private void SpawnTile()
     {
-        var randomCell = Random.Range(0, cells.Length);
+        var randomCell = Random.Range(0, _cells.Length);
 
         // Check if there are still empty cells available
-        if (Array.Exists(cells, cell => cell.transform.childCount == 0))
+        if (Array.Exists(_cells, cell => cell.transform.childCount == 0))
         {
             // If you find a cell that's already filled, try again 
-            while (cells[randomCell].transform.childCount != 0)
+            while (_cells[randomCell].transform.childCount != 0)
             {
-                randomCell = Random.Range(0, cells.Length);
+                randomCell = Random.Range(0, _cells.Length);
             }
 
             // Spawn the tile 
             if (tilePrefab == null) return;
-            Instantiate(tilePrefab, cells[randomCell].transform);
+            Instantiate(tilePrefab, _cells[randomCell].transform);
         }
         else
         {
             Debug.Log("Game over!");
         }
     }
+
+    public TileProperties[] TileClassifiers
+    {
+        get => tileProperties;
+        set => tileProperties = value;
+    }
 }
-
-
