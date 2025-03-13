@@ -30,8 +30,6 @@ public class TileManager : MonoBehaviour
     private const int Cols = 4; // Set this based on your grid size
     private Tile[,] _tiles;
 
-
-    // Start is called before the first frame update
     void Start()
     {
         var foundCells = GameObject.FindGameObjectsWithTag("Cell");
@@ -39,26 +37,24 @@ public class TileManager : MonoBehaviour
         // Sort the array by the order of the objects in the hierarchy
         foundCells = foundCells.OrderBy(cell => cell.transform.GetSiblingIndex()).ToArray();
 
-
         if (foundCells.Length != Rows * Cols)
         {
             Debug.LogError("Grid size mismatch! Check the number of cells.");
             return;
         }
 
-        _cells = new GameObject[Rows, Cols];
-        _tiles = new Tile[Rows, Cols];
+        _cells = new GameObject[Cols, Rows];
+        _tiles = new Tile[Cols, Rows];
 
-        for (var i = 0; i < Rows; i++)
+        for (var col = 0; col < Cols; col++)
         {
-            for (var j = 0; j < Cols; j++)
+            for (var row = 0; row < Rows; row++)
             {
-                _cells[i, j] = foundCells[i * Cols + j]; // Map from 1D to 2D
+                _cells[col, row] = foundCells[row * Cols + col]; // Mapping adjusted
             }
         }
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Space))
@@ -69,13 +65,6 @@ public class TileManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.LeftArrow))
         {
             _direction = "left";
-            Debug.Log("VAR");
-
-            foreach (var tile in _tiles)
-            {
-                if (tile == null) return;
-                ShiftDirections("left");
-            }
         }
         else if (Input.GetKeyDown(KeyCode.RightArrow))
         {
@@ -91,12 +80,8 @@ public class TileManager : MonoBehaviour
         }
     }
 
-    /**
-     * Spawns a new tile in a random open spot on the board
-     */
     private void SpawnTile()
     {
-        // Check if there are still empty cells available
         bool hasEmptyCell = false;
         foreach (var cell in _cells)
         {
@@ -113,47 +98,39 @@ public class TileManager : MonoBehaviour
             return;
         }
 
-        int row, col;
+        int col, row;
         do
         {
-            row = Random.Range(0, _cells.GetLength(0)); // Get random row
-            col = Random.Range(0, _cells.GetLength(1)); // Get random column
-        } while (_cells[row, col].transform.childCount != 0);
+            col = Random.Range(0, _cells.GetLength(0)); // Get random col
+            row = Random.Range(0, _cells.GetLength(1)); // Get random row
+        } while (_cells[col, row].transform.childCount != 0);
 
-        // Spawn the tile 
         if (tilePrefab == null) return;
-        var newTile = Instantiate(tilePrefab, _cells[row, col].transform);
-        _tiles[row, col] = newTile.gameObject.GetComponent<Tile>();
+        var newTile = Instantiate(tilePrefab, _cells[col, row].transform);
+        _tiles[col, row] = newTile.gameObject.GetComponent<Tile>();
+        Debug.Log(col + ", " + row);
     }
-
 
     private void MoveTile(string direction)
     {
-        // left: rows: 0 1 2 3
-        // right: rows: 3 2 1 0
-        // up: cols: 0 1 2 3 
-        // down: cols: 3 2 1 0 
+        // left: cols: 0 1 2 3
+        // right: cols: 3 2 1 0
+        // up: rows: 0 1 2 3 
+        // down: rows: 3 2 1 0 
     }
 
-    private void ShiftDirections(string direction)
+    private void ShiftLeft()
     {
-        if (direction == "left")
+        for (var col = 0; col < Cols; col++)
         {
-            for (var i = 0; i < Rows; i++)
+            for (var row = 0; row < Rows; row++)
             {
-                for (var j = 0; j < Cols; j++)
-                {
-                    if (j - 1 < 0) continue;
-                    if (_tiles[i, j - 1] == null)
-                    {
-                        Debug.Log("move left one");
-                    }
-                }
+                // Adjust logic here based on new column-major order
             }
         }
     }
 
-    public TileProperties[] TileClassifiers
+    public TileProperties[] TileProperties
     {
         get => tileProperties;
         set => tileProperties = value;

@@ -1,5 +1,6 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
@@ -8,7 +9,9 @@ public class Tile : MonoBehaviour
     [SerializeField] private Color tileColor;
     [SerializeField] private Color textColor;
     [SerializeField] private TMP_Text text;
-    private TileProperties[] _tileClassifiers;
+    [SerializeField] private int xIndex;
+    [SerializeField] private int yIndex;
+    private TileProperties[] _tileProperties;
     private TileManager _tileManager;
 
     public TMP_Text Text
@@ -29,6 +32,18 @@ public class Tile : MonoBehaviour
         set => textColor = value;
     }
 
+    public int XIndex
+    {
+        get => xIndex;
+        set => xIndex = value;
+    }
+
+    public int YIndex
+    {
+        get => yIndex;
+        set => yIndex = value;
+    }
+
     private void Start()
     {
         text = GetComponentInChildren<TMP_Text>();
@@ -38,7 +53,7 @@ public class Tile : MonoBehaviour
 
         if (_tileManager != null)
         {
-            _tileClassifiers = _tileManager.TileClassifiers;
+            _tileProperties = _tileManager.TileProperties;
         }
 
         StartingTile();
@@ -53,8 +68,8 @@ public class Tile : MonoBehaviour
 
         if (chanceOf2 != 0) return;
 
-        text.text = _tileClassifiers[1].Value + "";
-        textColor = _tileClassifiers[1].TextColor;
-        tileColor = _tileClassifiers[1].TileColor;
+        text.text = _tileProperties[1].Value + "";
+        textColor = _tileProperties[1].TextColor;
+        tileColor = _tileProperties[1].TileColor;
     }
 }
