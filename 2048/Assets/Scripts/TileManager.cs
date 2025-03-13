@@ -29,9 +29,13 @@ public class TileManager : MonoBehaviour
     private const int Rows = 4; // Set this based on your grid size
     private const int Cols = 4; // Set this based on your grid size
     private Tile[,] _tiles;
+    [SerializeField] private GameObject tilesParent;
+    public Action OnArrowPressed;
+    Vector3 targetPosition = Vector3.zero;
 
     void Start()
     {
+        OnArrowPressed += () => ChangeIndex(_direction); // Use a lambda expression to delay invocation
         var foundCells = GameObject.FindGameObjectsWithTag("Cell");
 
         // Sort the array by the order of the objects in the hierarchy
@@ -78,6 +82,47 @@ public class TileManager : MonoBehaviour
         {
             _direction = "down";
         }
+
+        if (Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.RightArrow) ||
+            Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.DownArrow))
+        {
+            ChangeIndex(_direction);
+        }
+
+        // Moves the tiles
+        foreach (var tile in _tiles)
+        {
+            if (tile == null) continue;
+            tile.transform.parent = tilesParent.transform.parent;
+            targetPosition = _cells[tile.YIndex, tile.XIndex].transform.position;
+
+            // Move the tile incrementally towards the target position
+            tile.transform.position =
+                Vector3.MoveTowards(tile.transform.position, targetPosition, 100 * (10 * Time.deltaTime));
+        }
+    }
+
+    private void ChangeIndex(string direction)
+    {
+        foreach (var tile in _tiles)
+        {
+            if (tile == null || tile.transform.position != targetPosition) continue;
+            switch (direction)
+            {
+                case "left":
+                    tile.YIndex -= 1;
+                    break;
+                case "right":
+                    tile.YIndex += 1;
+                    break;
+                case "up":
+                    tile.XIndex -= 1;
+                    break;
+                case "down":
+                    tile.XIndex += 1;
+                    break;
+            }
+        }
     }
 
     private void SpawnTile()
@@ -108,6 +153,10 @@ public class TileManager : MonoBehaviour
         if (tilePrefab == null) return;
         var newTile = Instantiate(tilePrefab, _cells[col, row].transform);
         _tiles[col, row] = newTile.gameObject.GetComponent<Tile>();
+        _tiles[col, row].YIndex = col;
+        _tiles[col, row].XIndex = row;
+        Debug.Log(_cells[col, row].transform.position.x);
+
         Debug.Log(col + ", " + row);
     }
 
